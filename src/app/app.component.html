@@ -1,0 +1,31 @@
+<nav class="navbar navbar-expand navbar-light bg-light">
+  <a class="navbar-brand">{{pageTitle}}</a>
+  <ul class="navbar-nav">
+    <li class="nav-item">
+      <a class="nav-link" [routerLink]="['/welcome']">Accueil</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" [routerLink]="['/films']">Films</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" [routerLink]="['/films/', 0, 'edit']">Ajouter un film</a>
+    </li>
+  </ul>
+  <ul class="navbar-nav ml-auto">
+    <li class="nav-item" *ngIf="isLoggedIn">
+      <a class="nav-link">Bienvenue {{ userName }}</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link">Afficher message</a>
+    </li>
+    <li class="nav-item" *ngIf="!isLoggedIn">
+      <a class="nav-link" [routerLink]="['/login']">se connecter</a>
+    </li>
+    <li class="nav-item" *ngIf="isLoggedIn">
+      <a class="nav-link" (click)="logOut()">déconnexion</a>
+    </li>
+  </ul>
+</nav>
+<div class="container">
+  <router-outlet></router-outlet>
+</div>

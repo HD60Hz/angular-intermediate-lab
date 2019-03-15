@@ -1,0 +1,78 @@
+<div class="card">
+  <div class="card-header">
+    {{pageTitle}}
+  </div>
+
+  <div class="card-body">
+    <form novalidate
+          (ngSubmit)="login(loginForm)"
+          #loginForm="ngForm"
+          autocomplete="off">
+      <fieldset>
+
+        <div class="form-group row">
+          <label class="col-md-2 col-form-label"
+                 for="userNameId">Login</label>
+          <div class="col-md-8">
+            <input class="form-control"
+                   id="userNameId"
+                   type="text"
+                   placeholder="User Name (required)"
+                   required
+                   ngModel
+                   name="userName"
+                   #userNameVar="ngModel"
+                   [ngClass]="{'is-invalid': (userNameVar.touched || userNameVar.dirty) && !userNameVar.valid }" />
+            <span class="invalid-feedback">
+              <span *ngIf="userNameVar.errors?.required">
+                le login est obligatoir
+              </span>
+            </span>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label class="col-md-2 col-form--label"
+                 for="passwordId">Mot de passe</label>
+
+          <div class="col-md-8">
+            <input class="form-control"
+                   id="passwordId"
+                   type="password"
+                   placeholder="Password (required)"
+                   required
+                   ngModel
+                   name="password"
+                   #passwordVar="ngModel"
+                   [ngClass]="{'is-invalid': (passwordVar.touched || passwordVar.dirty) && !passwordVar.valid }" />
+            <span class="invalid-feedback">
+              <span *ngIf="passwordVar.errors?.required">
+                Le mot de passe est obligatoire
+              </span>
+            </span>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-4 offset-md-2">
+            <button class="btn btn-primary mr-3"
+                    type="submit"
+                    style="width:160px"
+                    [disabled]="!loginForm.valid">
+              Se connecter
+            </button>
+            <button class="btn btn-outline-secondary"
+                    type="button"
+                    style="width:160px">
+              Quitter
+            </button>
+          </div>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+
+  <div class="alert alert-danger"
+       *ngIf="errorMessage">{{errorMessage}}
+  </div>
+</div>
