@@ -83,7 +83,11 @@ Chaque fois la valeur est modifié on appelle le setter, oui c'est ce qu'il nous
     this.filteredFilms = this.listFilter ? this.performFilter(this.listFilter) : this.films;
   }
 ```
+```html
+ <input type="text" [(ngModel)]="listFilter" />
+```
 
+L'utilisation de getter/setter ou de propriété ça dépend du besoin, même si je trouve que le pattern getter et setter est plus propre
 
 
 

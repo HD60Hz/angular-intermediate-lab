@@ -17,17 +17,27 @@ export class FilmsComponent implements OnInit {
   showImage = false;
   errorMessage = '';
 
-  listFilter = '';
+  _listFilter = '';
 
   filteredFilms: Film[] = [];
   films: Film[] = [];
+
+  get listFilter(): string {
+    return this._listFilter;
+  }
+
+  set listFilter(value: string) {
+    this._listFilter = value;
+    this.filteredFilms = this.listFilter ? this.performFilter(this.listFilter) : this.films;
+  }
+
 
   constructor(private filmService: FilmService, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
 
     const filterBy = this.route.snapshot.queryParamMap.get('filterBy');
-    this.listFilter = filterBy ? filterBy: '' ;
+    this._listFilter = filterBy ? filterBy: '' ;
     this.showImage = JSON.parse(this.route.snapshot.queryParamMap.get('showImage'));
 
     this.filmService.getFilms().subscribe(
@@ -37,11 +47,6 @@ export class FilmsComponent implements OnInit {
       },
       error => this.errorMessage = <any>error
     );
-  }
-
-  filterFilm(term: string): void{
-    this.listFilter = term;
-    this.filteredFilms = this.performFilter(this.listFilter);
   }
 
   performFilter(filterBy: string): Film[] {
