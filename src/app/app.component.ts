@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  title = 'Lab02';
+  title = 'A-team';
 
   get isLoggedIn(): boolean {
     return this.authService.isLoggedIn;
