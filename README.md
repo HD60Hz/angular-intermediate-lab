@@ -155,4 +155,60 @@ Presque de la même façon on peut selectionner plusieurs éléments
 @ViewChildren('divElementVar')
 divs: QueryList<ElementRef>;
 ```
+# Communication parent to child #
+
+Pour avoir une communication entre component parent et component enfant, la template du parent doit contenir la template de la fille.
+
+On va commencer à le faire en créant un component pour gérer que le filtre 
+
+On utilisant angular/cli on va génerer un component dans le module shared comme ça on peut le réutiliser dans toute l'application 
+
+```bash
+ng g c shared/criteria
+```
+Si on regarde de prés notre shared.module.ts 
+```typeScript
+@NgModule({
+  imports: [
+    FormsModule,
+    CommonModule
+  ],
+  declarations: [
+    StarComponent,
+    CriteriaComponent
+  ],
+  exports: [
+    StarComponent,
+    CommonModule,
+    FormsModule
+  ]
+})
+export class SharedModule { }
+```
+On voit bien qu'il l'a ajouté dans les déclarations, c'est pas suffisant pour qu'on puisse l'utiliser, il faut le partager on le mettant dans 'exports'
+
+```typeScript
+@NgModule({
+  imports: [
+    FormsModule,
+    CommonModule
+  ],
+  declarations: [
+    StarComponent,
+    CriteriaComponent
+  ],
+  exports: [
+    StarComponent,
+    CommonModule,
+    FormsModule,
+    CriteriaComponent
+  ]
+})
+export class SharedModule { }
+```
+
+On va utiliser l'html qu'on a déjà dans notre page films
+
+'criteria.component.html'
+
 
