@@ -337,7 +337,147 @@ On va commencer par réparer notre filtre en utilisant le déorateur @Output()
     this.listFilter = term;
   }
 ```
-Et voilà notre filtre re marche de nouveau 
+Et voilà notre filtre est sauvé :) 
+
+# Communication par service #
+
+A la création de service, il faut l'enregistrer comme un provider avec Angular Injector, ensuite on peut l'injecter dans les components.
+
+Les services par défaut dans Angular sont singletons, ce qui veut dire que tous les component auront accés aux même données.
+
+
+Parmis les utilisations de service on a : 
+- service de log
+- Encapsulation de fonction d'accès aux données 
+- partage de data
+- calcul et vérification de rg 
+- ..... 
+
+* Service comme un stock de propriété : 
+Pour garder l'affichage de l'image et du filtre on a utilisé dans notre module de routage la queryParamsHandling="preserve", maintenant on va le faire avec les services.
+
+Nous allons nettoyer ce qu'on a fait dans le routage 
+
+'FilmsComponent.html'
+```html
+<!-- supprimer le  [queryParams]="{filterBy : listFilter, showImage: showImage}" -->
+<a [routerLink]="['/films',film.id]">
+                {{ film.filmName }}
+              </a>
+```          
+'FilmsComponent'
+```typeScript
+
+  ngOnInit(): void {
+    // delete this
+    // const filterBy = this.route.snapshot.queryParamMap.get('filterBy');
+    // this._listFilter = filterBy ? filterBy: '' ;
+    // this.showImage = JSON.parse(this.route.snapshot.queryParamMap.get('showImage'));
+```
+'FilmDetailComponent.html'
+```html
+<!-- supprimer le   queryParamsHandling="preserve" -->
+<button class="btn btn-outline-secondary mr-3" style="width:160px" [routerLink]="['/films']">
+```
+
+Maintenant on va génerer un service avec angular/cli
+
+```bash
+ng g s films/film-params
+```
+Par défaut Angular/cli ajoute sur le service décorateur @Injectable({providedIn: 'root'}) on peut l'enlever par contre il faut l'ajouter dans le provider de film.module par exemple  ou dans le component à l'aide du systeme de providers.
+
+'film-params.service.ts'
+```typeScript
+@Injectable()
+export class FilmParamsService {
+```
+film.module.ts
+```typeScript
+@NgModule({
+  imports: [
+    SharedModule,
+    RouterModule.forChild(ROUTES)
+  ],
+  declarations: [
+    FilmsComponent,
+    FilmDetailComponent,
+    EditFilmComponent,
+    EditFilmBasicInfoComponent,
+    EditFilmActeursComponent
+  ],
+  providers: [FilmParamsService]
+})
+export class FilmModule { }
+```
+Maintenant le service est accesible
+
+On va ajouter les prorietés qu'on veut garder dans le service 
+
+```typeScript
+import { Injectable } from '@angular/core';
+@Injectable()
+export class FilmParamsService {
+  showImage: boolean;
+  listFilter: string;
+  constructor() { }
+}
+```
+Oui c'est tout ce qu'il faut faire c'est un service de stockage de proriétés :) 
+
+maintenant dans le FilmsComponent on va utiliser notre service
+
+```typeScript
+  set listFilter(value: string) {
+    this._listFilter = value;
+    // ici
+    this.filmParamsService.listFilter = this._listFilter;
+    this.filteredFilms = this.listFilter ? this.performFilter(this.listFilter) : this.films;
+  }
+  
+  // ici
+  constructor(private filmService: FilmService, private route: ActivatedRoute, private filmParamsService: FilmParamsService) {}
+  
+  ngOnInit(): void {
+  // ici
+    const filterBy = this.filmParamsService.listFilter;
+    this._listFilter = filterBy ? filterBy : '' ;
+    this.showImage = this.filmParamsService.showImage === true;
+
+//......................
+  toggleImage(): void {
+    this.showImage = !this.showImage;
+    // ici
+    this.filmParamsService.showImage = this.showImage;
+  }
+
+```
+
+et bingo ça fonctionne comme sur des roulettes
+
+Avants de passer à autres choses il faut bien comprendre le cycle de vie de service :
+
+- Déclaration de service dans app.module, il sera accessible par tous les components de l'applications  
+
+- Déclaration dans le component par exemple celui de FilmsComponent
+```typeScript
+@Component({
+  selector: 'app-films',
+  templateUrl: './films.component.html',
+  styleUrls: ['./films.component.css'],
+  providers: [FilmParamsService]
+})
+export class FilmsComponent implements OnInit {
+```
+Le service sera détruit quand le component sera détruit et il sera accessible par tous les child components et les child route component 
+
+si on l'ajoute une deuxième fois dans le FilmDetailComponent, on aura deux instance de filmParamsService
+
+- Déclaration dans le module d'une feature par exemple film.module
+il sera accessible par tous les components de l'application mais si on utilise le lazy loading, il va être charger seulement que le module est chargé 
+
+
+
 
 
 

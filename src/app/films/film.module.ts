@@ -1,3 +1,4 @@
+import { FilmParamsService } from './film-params.service';
 import { EditFilmActeursComponent } from './edit-film/edit-film-acteurs.component';
 import { EditFilmBasicInfoComponent } from './edit-film/edit-film-basic-info.component';
 import { FilmDetailComponent } from './film-detail.component';
@@ -45,6 +46,7 @@ const ROUTES = [
     EditFilmComponent,
     EditFilmBasicInfoComponent,
     EditFilmActeursComponent
-  ]
+  ],
+  providers: [FilmParamsService]
 })
 export class FilmModule { }
