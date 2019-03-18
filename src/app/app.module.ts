@@ -1,37 +1,23 @@
-import { AppRoutingModule } from './app-routing.module';
-import { UserModule } from './user/user.module';
-import { MessageModule } from './messages/message.module';
-import { PageNotFoundComponent } from './page-not-found.component';
-import { FilmModule } from './films/film.module';
-import { MessageService } from './messages/message.service';
-import { FilmService } from './films/film.service';
-import { FilmData } from './films/films-data';
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { AppService } from "./app.service";
+import { BrowserModule } from "@angular/platform-browser";
+import { NgModule } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { HttpModule } from "@angular/http";
 
-import { AppComponent } from './app.component';
-import { ATeamComponent } from './a-team/a-team.component';
-import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
-import { SharedModule } from './shared/shared.module';
-import { HttpClientModule } from '@angular/common/http';
+import { AppComponent } from "./app.component";
+
+import { InMemoryWebApiModule } from "angular-in-memory-web-api";
+import { FakeBackendService } from "./fake-backend.service";
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    ATeamComponent,
-    PageNotFoundComponent
-  ],
+  declarations: [AppComponent],
   imports: [
-    SharedModule,
-    HttpClientModule,
-    InMemoryWebApiModule.forRoot(FilmData, { delay: 1000 }),
-    FilmModule,
-    UserModule,
-    MessageModule,
     BrowserModule,
-    AppRoutingModule
+    FormsModule,
+    HttpModule,
+    InMemoryWebApiModule.forRoot(FakeBackendService)
   ],
-  providers: [FilmService, MessageService],
+  providers: [AppService],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}
