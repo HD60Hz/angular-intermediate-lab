@@ -299,5 +299,45 @@ Maintenant avec la référence sur la template on va essayer à accéder à la v
 ```
 Le filtre ne marche plus mais on va le réparer ensemble juste après (y) 
 
+# Communication child to component #
+
+Comme vous l'avez constaté on a besoin parfois de faire la communication dans l'autre sens ça veut dire dans le sens du child vers le parent 
+
+On va commencer par réparer notre filtre en utilisant le déorateur @Output()
+
+* Comment ça marche :
+
+1. Le component child à chaque modification de l'input va émettre un évenement avec du data comme payload 
+
+'CriteriaComponent'
+```typeScript
+// déclaration de 
+  @Output() valueModified: EventEmitter<string> = new EventEmitter<string>();
+  private _listFilter = '';
+  @Input()
+  set listFilter(value: string) {
+    this._listFilter = value;
+    // émet un événement avec du data 
+    this.valueModified.emit(value);
+  }
+  get listFilter(): string {
+    return this._listFilter;
+  }
+```
+2. Le component parent va le catcher dans la template 
+'FilmsComponent.html'
+```html
+<app-criteria class="col-md-8 row" [listFilter]="listFilter" (valueModified)='onInputHasBenUpdated($event)'
+        #filterCriteria>
+```
+3. Le component parent a faire un traitement avec du data récupérer
+'FilmsComponent'
+```typeScript
+  onInputHasBenUpdated(term: string): void{
+    this.listFilter = term;
+  }
+```
+Et voilà notre filtre re marche de nouveau 
+
 
 

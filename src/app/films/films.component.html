@@ -2,61 +2,62 @@
   <div class="card-header">
     {{pageTitle}}
   </div>
-    <div class="card-body">
-      <div class="row">
-        <app-criteria class="col-md-8 row" [listFilter]="listFilter" #filterCriteria></app-criteria>
-        <div class="col-md-4 text-right">
-          <button class="btn btn-outline-primary btn-sm" (click)="toggleImage()">
-            {{showImage ? "Cacher" : "Afficher"}} Image
-          </button>
-        </div>
+  <div class="card-body">
+    <div class="row">
+      <app-criteria class="col-md-8 row" [listFilter]="listFilter" (valueModified)='onInputHasBenUpdated($event)'
+        #filterCriteria>
+      </app-criteria>
+      <div class="col-md-4 text-right">
+        <button class="btn btn-outline-primary btn-sm" (click)="toggleImage()">
+          {{showImage ? "Cacher" : "Afficher"}} Image
+        </button>
       </div>
-      <div class="row" *ngIf="listFilter">
-        <div class="col-md-4">
-          <h4> filtré par : {{filterCriteria.listFilter}}</h4>
-        </div>
+    </div>
+    <div class="row" *ngIf="listFilter">
+      <div class="col-md-4">
+        <h4> filtré par : {{listFilter}}</h4>
       </div>
+    </div>
 
-      <div id="films" class="row view-group">
-        <div *ngFor="let film of filteredFilms" class="item col-xs-4 col-lg-4">
-          <div class="thumbnail card">
-            <div class="img-event text-center">
-              <img *ngIf="showImage && film.imageUrl" class="group list-group-image img-fluid img-card"
-                [src]="film.imageUrl" [title]="film.filmName">
-            </div>
-            <div class="caption card-body">
-              <h4 class="group card-title inner list-group-item-heading">
-                <a [routerLink]="['/films',film.id]" [queryParams]="{filterBy : listFilter, showImage: showImage}">
-                  {{ film.filmName }}
-                </a>
-              </h4>
-              <p>
-                <pm-star [rating]="film.starRating" class="goldenrod"></pm-star>
-              </p>
-              <p class="group inner list-group-item-text">Code : {{ film.filmCode }}</p>
-              <p class="group inner list-group-item-text">
-                Date de sortie : {{ film.releaseDate }}</p>
-              <div class="row">
-                <div class="col-xs-12 col-md-6">
-                  <p class="lead">
-                    Prix : {{ film.price | currency:"USD":"symbol":"1.2-2" }}
-                  </p>
-                </div>
-                <div class="col-xs-12 col-md-6 text-right">
-                  <button class="btn btn-outline-primary btn-sm" [routerLink]="['/films',film.id,'edit']">
-                    Modifier
-                  </button>
-                </div>
+    <div id="films" class="row view-group">
+      <div *ngFor="let film of filteredFilms" class="item col-xs-4 col-lg-4">
+        <div class="thumbnail card">
+          <div class="img-event text-center">
+            <img *ngIf="showImage && film.imageUrl" class="group list-group-image img-fluid img-card"
+              [src]="film.imageUrl" [title]="film.filmName">
+          </div>
+          <div class="caption card-body">
+            <h4 class="group card-title inner list-group-item-heading">
+              <a [routerLink]="['/films',film.id]" [queryParams]="{filterBy : listFilter, showImage: showImage}">
+                {{ film.filmName }}
+              </a>
+            </h4>
+            <p>
+              <pm-star [rating]="film.starRating" class="goldenrod"></pm-star>
+            </p>
+            <p class="group inner list-group-item-text">Code : {{ film.filmCode }}</p>
+            <p class="group inner list-group-item-text">
+              Date de sortie : {{ film.releaseDate }}</p>
+            <div class="row">
+              <div class="col-xs-12 col-md-6">
+                <p class="lead">
+                  Prix : {{ film.price | currency:"USD":"symbol":"1.2-2" }}
+                </p>
+              </div>
+              <div class="col-xs-12 col-md-6 text-right">
+                <button class="btn btn-outline-primary btn-sm" [routerLink]="['/films',film.id,'edit']">
+                  Modifier
+                </button>
               </div>
             </div>
           </div>
         </div>
       </div>
-
     </div>
+
+  </div>
 </div>
 
-<div *ngIf="errorMessage"
-     class="alert alert-danger">
+<div *ngIf="errorMessage" class="alert alert-danger">
   Error: {{ errorMessage }}
 </div>

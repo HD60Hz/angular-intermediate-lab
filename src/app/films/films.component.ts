@@ -49,6 +49,10 @@ export class FilmsComponent implements OnInit {
     );
   }
 
+  onInputHasBenUpdated(term: string): void{
+    this.listFilter = term;
+  }
+
   performFilter(filterBy: string): Film[] {
     filterBy = filterBy.toLocaleLowerCase();
     return this.films.filter((film: Film) =>

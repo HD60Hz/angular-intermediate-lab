@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-criteria',
@@ -8,20 +8,19 @@ import { Component, OnInit, Input, AfterViewInit, ViewChild, ElementRef } from '
 export class CriteriaComponent implements OnInit {
 
   @ViewChild('filterElement') inputFilter: ElementRef;
-
+  @Output() valueModified: EventEmitter<string> = new EventEmitter<string>();
   private _listFilter = '';
-
   @Input()
   set listFilter(value: string) {
     this._listFilter = value;
+    this.valueModified.emit(value);
   }
-
   get listFilter(): string {
     return this._listFilter;
   }
 
   constructor() { }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
 }
