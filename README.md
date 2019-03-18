@@ -210,5 +210,94 @@ export class SharedModule { }
 On va utiliser l'html qu'on a déjà dans notre page films
 
 'criteria.component.html'
+```html
+<div class="col-md-12">Filtrer par titre: <input type="text" [(ngModel)]="listFilter" #filterElement /></div>
+```
+
+on va appeler notre component dans le html de film 
+
+```html
+      <div class="row">
+        <app-criteria class="col-md-8 row"></app-criteria>
+        <div class="col-md-4 text-right">
+          <button class="btn btn-outline-primary btn-sm" (click)="toggleImage()">
+            {{showImage ? "Cacher" : "Afficher"}} Image
+          </button>
+        </div>
+      </div>
+```
+
+Pour l'instant notre component criteria ne fait rien, mais on va lui passer une valeur par defaut on utilisant le systeme de propriete
+
+```html
+      <div class="row">
+        <app-criteria class="col-md-8 row" [listFilter]="listFilter"></app-criteria>
+        <div class="col-md-4 text-right">
+          <button class="btn btn-outline-primary btn-sm" (click)="toggleImage()">
+            {{showImage ? "Cacher" : "Afficher"}} Image
+          </button>
+        </div>
+      </div>
+```
+
+à l'aide du décorateur @Input() on peut récupérer la valeur de listFilter
+
+'criteria.component.ts'
+```typeScript
+  private _listFilter = '';
+// On a utiliser le pattern de getter et setter il y a une 2e solution c'est le lifecycle hooks : ...
+// ngOnChanges(changes: SimpleChanges) {
+// }
+  @Input()
+  set listFilter(value: string) {
+    this._listFilter = value;
+  }
+
+  get listFilter(): string {
+    return this._listFilter;
+  }
+```
+
+dans le typeScript on va initialiser notre term de recherche par 'Sc'
+```typeScript
+  private _listFilter = '';
+    //..........................................
+  get listFilter(): string {
+    return this._listFilter;
+  }
+  set listFilter(value: string) {
+    this._listFilter = value;
+    this.filteredFilms = this.listFilter ? this.performFilter(this.listFilter) : this.films;
+  }
+
+  ngOnInit(): void {
+    const filterBy = this.route.snapshot.queryParamMap.get('filterBy');
+    this._listFilter = filterBy ? filterBy: 'Sc' ;
+    this.showImage = JSON.parse(this.route.snapshot.queryParamMap.get('showImage'));
+    //..........................................
+```
+
+On a bien réussie à passer une information du parent component au child component
+
+Maintenant avec la référence sur la template on va essayer à accéder à la valeur de l'input depuis le parent 
+
+```html
+<div class="row">
+  <!-- réference sur l'html -->
+  <app-criteria class="col-md-8 row" [listFilter]="listFilter" #filterCriteria></app-criteria>
+  <div class="col-md-4 text-right">
+    <button class="btn btn-outline-primary btn-sm" (click)="toggleImage()">
+      {{showImage ? "Cacher" : "Afficher"}} Image
+    </button>
+  </div>
+</div>
+<div class="row" *ngIf="listFilter">
+  <div class="col-md-4">
+    <h4> filtré par : {{filterCriteria.listFilter}}</h4>
+  </div>
+</div>
+```
+Le filtre ne marche plus mais on va le réparer ensemble juste après (y) 
+
 
 

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 
 @Component({
   selector: 'app-criteria',
@@ -7,9 +7,21 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CriteriaComponent implements OnInit {
 
+  @ViewChild('filterElement') inputFilter: ElementRef;
+
+  private _listFilter = '';
+
+  @Input()
+  set listFilter(value: string) {
+    this._listFilter = value;
+  }
+
+  get listFilter(): string {
+    return this._listFilter;
+  }
+
   constructor() { }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
 }

@@ -4,11 +4,8 @@
   </div>
     <div class="card-body">
       <div class="row">
-        <div class="col-md-2">Filtrer par titre:</div>
-        <div class="col-md-4">
-          <input type="text" [(ngModel)]="listFilter" #filterElement/>
-        </div>
-        <div class="col-md-6 text-right">
+        <app-criteria class="col-md-8 row" [listFilter]="listFilter" #filterCriteria></app-criteria>
+        <div class="col-md-4 text-right">
           <button class="btn btn-outline-primary btn-sm" (click)="toggleImage()">
             {{showImage ? "Cacher" : "Afficher"}} Image
           </button>
@@ -16,7 +13,7 @@
       </div>
       <div class="row" *ngIf="listFilter">
         <div class="col-md-4">
-          <h4> filtré par : {{listFilter}}</h4>
+          <h4> filtré par : {{filterCriteria.listFilter}}</h4>
         </div>
       </div>
 

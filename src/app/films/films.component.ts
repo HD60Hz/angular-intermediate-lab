@@ -9,7 +9,7 @@ import { Film } from './film';
   templateUrl: './films.component.html',
   styleUrls: ['./films.component.css']
 })
-export class FilmsComponent implements OnInit, AfterViewInit {
+export class FilmsComponent implements OnInit {
 
   pageTitle = 'Films';
   imageWidth = 50;
@@ -17,12 +17,11 @@ export class FilmsComponent implements OnInit, AfterViewInit {
   showImage = false;
   errorMessage = '';
 
-  _listFilter = '';
+  private _listFilter = '';
 
   filteredFilms: Film[] = [];
   films: Film[] = [];
 
-  @ViewChild('filterElement') inputFilter: ElementRef;
 
   get listFilter(): string {
     return this._listFilter;
@@ -34,17 +33,11 @@ export class FilmsComponent implements OnInit, AfterViewInit {
   }
 
 
-  constructor(private filmService: FilmService, private route: ActivatedRoute) {
-  }
-
-  ngAfterViewInit(): void{
-    console.log('input de filtre :', this.inputFilter);
-    this.inputFilter.nativeElement.focus();
-  }
+  constructor(private filmService: FilmService, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
     const filterBy = this.route.snapshot.queryParamMap.get('filterBy');
-    this._listFilter = filterBy ? filterBy: '' ;
+    this._listFilter = filterBy ? filterBy: 'Sc' ;
     this.showImage = JSON.parse(this.route.snapshot.queryParamMap.get('showImage'));
 
     this.filmService.getFilms().subscribe(
