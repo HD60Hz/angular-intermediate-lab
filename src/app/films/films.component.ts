@@ -1,6 +1,6 @@
 import { ActivatedRoute } from '@angular/router';
 import { FilmService } from './film.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
 import { Film } from './film';
 
 
@@ -9,7 +9,7 @@ import { Film } from './film';
   templateUrl: './films.component.html',
   styleUrls: ['./films.component.css']
 })
-export class FilmsComponent implements OnInit {
+export class FilmsComponent implements OnInit, AfterViewInit {
 
   pageTitle = 'Films';
   imageWidth = 50;
@@ -22,6 +22,8 @@ export class FilmsComponent implements OnInit {
   filteredFilms: Film[] = [];
   films: Film[] = [];
 
+  @ViewChild('filterElement') inputFilter: ElementRef;
+
   get listFilter(): string {
     return this._listFilter;
   }
@@ -32,10 +34,15 @@ export class FilmsComponent implements OnInit {
   }
 
 
-  constructor(private filmService: FilmService, private route: ActivatedRoute) { }
+  constructor(private filmService: FilmService, private route: ActivatedRoute) {
+  }
+
+  ngAfterViewInit(): void{
+    console.log('input de filtre :', this.inputFilter);
+    this.inputFilter.nativeElement.focus();
+  }
 
   ngOnInit(): void {
-
     const filterBy = this.route.snapshot.queryParamMap.get('filterBy');
     this._listFilter = filterBy ? filterBy: '' ;
     this.showImage = JSON.parse(this.route.snapshot.queryParamMap.get('showImage'));
