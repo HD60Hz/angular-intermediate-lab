@@ -1,0 +1,62 @@
+<div class="card"  *ngIf="film">
+  <div class="card-body">
+
+    <div class="row">
+
+      <div class="col-md-8">
+        <div class="row">
+          <div class="col-md-3">Titre:</div>
+          <div class="col-md-6">{{film.filmName}}</div>
+        </div>
+        <div class="row">
+          <div class="col-md-3">Code du film:</div>
+          <div class="col-md-6">{{film.filmCode}}</div>
+        </div>
+        <div class="row">
+          <div class="col-md-3">Description:</div>
+          <div class="col-md-6">{{film.description}}</div>
+        </div>
+        <div class="row">
+          <div class="col-md-3">Date de sortie:</div>
+          <div class="col-md-6">{{film.releaseDate}}</div>
+        </div>
+        <div class="row">
+          <div class="col-md-3">Prix:</div>
+          <div class="col-md-6">{{film.price|currency:"USD":"symbol"}}</div>
+        </div>
+        <div class="row">
+          <div class="col-md-3">Note :</div>
+          <div class="col-md-6">
+            <pm-star [rating]="film.starRating">
+            </pm-star>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-3">Genre:</div>
+          <div class="col-md-6">{{film.category}}</div>
+        </div>
+        <div class="row">
+          <div class="col-md-3">Acteurs :</div>
+          <div class="col-md-6">{{film.acteurs}}</div>
+        </div>
+      </div>
+
+      <div class="col-md-4" *ngIf="film.imageUrl">
+        <img class="center-block img-responsive" style="height: 300px;width: 200px;" [style.margin.px]="2" [src]="film.imageUrl"
+          [title]="film.filmName">
+      </div>
+    </div>
+
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <button class="btn btn-outline-primary" style="width:160px" [routerLink]="['/films',film.id,'edit']">
+          Modifier
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="alert alert-danger" *ngIf="errorMessage">{{errorMessage}}
+</div>
