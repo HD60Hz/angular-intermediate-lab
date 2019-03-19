@@ -1,0 +1,19 @@
+<div class='row' *ngIf='favoris'>
+    <div class='col-md-4'>
+        <h4>
+           Liste des films favoris
+        </h4>
+    </div>
+</div>
+<div class='row'>
+    <div class="col-md12" *ngIf="currentFilm">
+        Le prix du film choisi est : {{ currentFilm.price | currency:"USD":"symbol":"1.2-2" }}</div>
+</div>
+<div class='row'>
+    <div class='col-md-4'>
+        <app-film-shell-list></app-film-shell-list>
+    </div>
+    <div class='col-md-8'>
+        <app-film-shell-detail></app-film-shell-detail>
+    </div>
+</div>
