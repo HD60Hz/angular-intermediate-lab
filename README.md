@@ -841,3 +841,93 @@ on va adapter notre service en cas de suppression ou d'ajout
       );
   }
 ```
+* Service Notification 
+
+On peut utiliser le service comme un systeme de notification, il va notifier tous les component souscrit s'il y a une modification, on va utiliser la même logique de @Output quand le valueChange emet un événement, @Output c'est pour une communication entre component child parent 
+
+L'utilisation de EventEmiter est déconseillé dans un service ce qu'il faut utiliser c'est les Subject
+
+Subject : C'est un observable qui émet un événement(MultiCast) à tous les component/service souscrit à lui 
+
+Notre application fonctionne bien avec le change detection mais on va utiliser le Subject pour comprendre l'utilité dans le cas où on peut pas utiliser le binding 
+
+Hands-On :)
+
+1. On va déclarer notre subject dans service 
+
+Supprimer currentFilm: Film; pour qu'aucun component ou service puisse accéder à l'information en dehors de notre subject
+
+'film.service' 
+```typeScript
+ 
+ // Supprimer currentFilm: Film; pour qu'aucun component ou service puisse accéder à l'information en dehors de notre subject
+
+  // ajout de subject
+  private selctedFilmSource = new Subject<Film|null>();
+
+  // déclarer notre observable pour émettre une notif en cas de modification
+  selctedFilmChange$ = this.selctedFilmSource.asObservable();
+
+  constructor(private http: HttpClient) { }
+
+ // fonction comme facade public pour donner l'accés à notre Subject
+  changeCurrentFilm(selectedFilm: Film | null): void {
+    this.selctedFilmSource.next(selectedFilm);
+  }
+
+   createFilm(film: Film): Observable<Film> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    film.id = null;
+    return this.http.post<Film>(this.filmsUrl, film, { headers })
+      .pipe(
+        tap(data => console.log('createFilm: ' + JSON.stringify(data))),
+        tap(data => {
+          this.films.push(data);
+          // call function to update data using Subject
+          this.changeCurrentFilm(data);
+        }),
+        catchError(this.handleError)
+      );
+  }
+
+  deleteFilm(id: number): Observable<{}> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const url = `${this.filmsUrl}/${id}`;
+    return this.http.delete<Film>(url, { headers })
+      .pipe(
+        tap(data => console.log('deleteFilm: ' + id)),
+        tap(data => {
+          this.films.filter(function (f) {
+            return f.id !== id;
+          });
+          // call function to update data using Subject
+          this.changeCurrentFilm(null);
+        }
+        ),
+        catchError(this.handleError)
+      );
+  }
+```
+
+'film-shell.list.ts'
+```typeScript
+// call function to update data using Subject
+changeCurrentFilm(film: Film): void{
+  this.filmService.changeCurrentFilm(film);
+}
+
+```
+'film-shell.detail.ts'
+```typeScript
+export class FilmShellDetailComponent implements OnInit {
+  pageTitle: string = 'Film Detail';
+  film: Film | null;
+  constructor(private filmService: FilmService) { }
+  ngOnInit() {
+    // Subscribe to be notified when have a notification 
+    this.filmService.selctedFilmChange$.subscribe(
+        film => this.film = film
+      );
+  }
+}
+```

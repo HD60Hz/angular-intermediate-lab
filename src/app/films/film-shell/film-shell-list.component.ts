@@ -23,12 +23,8 @@ export class FilmShellListComponent implements OnInit {
     );
   }
 
-  onSelected(film: Film): void {
-    this.filmService.currentFilm = film;
-  }
-
-  changeCurrentFilm(film: Film){
-    this.filmService.currentFilm=film;
+  changeCurrentFilm(film: Film): void{
+    this.filmService.changeCurrentFilm(film);
   }
 
 }

@@ -2,7 +2,7 @@ import { Film } from './film';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, of, throwError, Subject } from 'rxjs';
 import { catchError, tap, map } from 'rxjs/operators';
 
 @Injectable({
@@ -12,9 +12,21 @@ export class FilmService {
 
   private filmsUrl = 'api/films';
   private films: Film[];
-  currentFilm: Film;
+
+  // Supprimer currentFilm: Film; pour qu'aucun component ou service puisse accéder à l'information en dehors de notre subject
+
+  // ajout de subject
+  private selctedFilmSource = new Subject<Film|null>();
+
+  // déclarer notre observable pour informer en cas de changement
+  selctedFilmChange$ = this.selctedFilmSource.asObservable();
 
   constructor(private http: HttpClient) { }
+
+// fonction comme facade public afin de mettre à jour le film selectionner
+  changeCurrentFilm(selectedFilm: Film | null): void {
+    this.selctedFilmSource.next(selectedFilm);
+  }
 
   getFilms(): Observable<Film[]> {
     return this.http.get<Film[]>(this.filmsUrl)
@@ -51,7 +63,7 @@ export class FilmService {
         tap(data => console.log('createFilm: ' + JSON.stringify(data))),
         tap(data => {
           this.films.push(data);
-          this.currentFilm = data;
+          this.changeCurrentFilm(data);
         }),
         catchError(this.handleError)
       );
@@ -67,7 +79,7 @@ export class FilmService {
           this.films.filter(function (f) {
             return f.id !== id;
           });
-          this.currentFilm = null;
+          this.changeCurrentFilm(null);
         }
         ),
         catchError(this.handleError)

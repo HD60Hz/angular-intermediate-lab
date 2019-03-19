@@ -7,15 +7,16 @@ import { Film } from '../film';
     templateUrl: './film-shell-detail.component.html'
 })
 export class FilmShellDetailComponent implements OnInit {
-    pageTitle: string = 'Film Detail';
 
-    get film(): Film | null {
-        return this.filmService.currentFilm;
-    }
+  pageTitle: string = 'Film Detail';
 
-    constructor(private filmService: FilmService) { }
+  film: Film | null;
 
-    ngOnInit() {
-    }
+  constructor(private filmService: FilmService) { }
 
+  ngOnInit() {
+    this.filmService.selctedFilmChange$.subscribe(
+        film => this.film = film
+      );
+  }
 }
