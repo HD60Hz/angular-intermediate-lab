@@ -9,7 +9,10 @@ import { catchError, tap, map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class FilmService {
+
   private filmsUrl = 'api/films';
+  private films: Film[];
+  currentFilm: Film;
 
   constructor(private http: HttpClient) { }
 
@@ -17,6 +20,7 @@ export class FilmService {
     return this.http.get<Film[]>(this.filmsUrl)
       .pipe(
         tap(data => console.log(JSON.stringify(data))),
+        tap(data => this.films = data),
         catchError(this.handleError)
       );
   }
@@ -24,6 +28,12 @@ export class FilmService {
   getFilm(id: number): Observable<Film> {
     if (id === 0) {
       return of(this.initializeFilm());
+    }
+    if (this.films) {
+      const filmRetrieved = this.films.find(f => {
+        return f.id === id;
+      });
+      if (filmRetrieved) { return of(filmRetrieved); }
     }
     const url = `${this.filmsUrl}/${id}`;
     return this.http.get<Film>(url)
@@ -36,9 +46,13 @@ export class FilmService {
   createFilm(film: Film): Observable<Film> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     film.id = null;
-    return this.http.post<Film>(this.filmsUrl, film, { headers: headers })
+    return this.http.post<Film>(this.filmsUrl, film, { headers })
       .pipe(
         tap(data => console.log('createFilm: ' + JSON.stringify(data))),
+        tap(data => {
+          this.films.push(data);
+          this.currentFilm = data;
+        }),
         catchError(this.handleError)
       );
   }
@@ -46,9 +60,16 @@ export class FilmService {
   deleteFilm(id: number): Observable<{}> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const url = `${this.filmsUrl}/${id}`;
-    return this.http.delete<Film>(url, { headers: headers })
+    return this.http.delete<Film>(url, { headers })
       .pipe(
         tap(data => console.log('deleteFilm: ' + id)),
+        tap(data => {
+          this.films.filter(function (f) {
+            return f.id !== id;
+          });
+          this.currentFilm = null;
+        }
+        ),
         catchError(this.handleError)
       );
   }
@@ -56,25 +77,19 @@ export class FilmService {
   updateFilm(film: Film): Observable<Film> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const url = `${this.filmsUrl}/${film.id}`;
-    return this.http.put<Film>(url, film, { headers: headers })
+    return this.http.put<Film>(url, film, { headers })
       .pipe(
         tap(() => console.log('updateFilm: ' + film.id)),
-        // Return the film on an update
         map(() => film),
         catchError(this.handleError)
       );
   }
 
   private handleError(err) {
-    // in a real world app, we may send the server to some remote logging infrastructure
-    // instead of just logging it to the console
     let errorMessage: string;
     if (err.error instanceof ErrorEvent) {
-      // A client-side or network error occurred. Handle it accordingly.
       errorMessage = `An error occurred: ${err.error.message}`;
     } else {
-      // The backend returned an unsuccessful response code.
-      // The response body may contain clues as to what went wrong,
       errorMessage = `Backend returned code ${err.status}: ${err.body.error}`;
     }
     console.error(err);
@@ -82,7 +97,6 @@ export class FilmService {
   }
 
   private initializeFilm(): Film {
-    // Return an initialized object
     return {
       id: 0,
       filmName: null,

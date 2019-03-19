@@ -1,3 +1,6 @@
+import { FilmShellListComponent } from './film-shell/film-shell-list.component';
+import { FilmShellDetailComponent } from './film-shell/film-shell-detail.component';
+import { FilmShellComponent } from './film-shell/film-shell.component';
 import { FilmParamsService } from './film-params.service';
 import { EditFilmActeursComponent } from './edit-film/edit-film-acteurs.component';
 import { EditFilmBasicInfoComponent } from './edit-film/edit-film-basic-info.component';
@@ -11,7 +14,7 @@ import { SharedModule } from '../shared/shared.module';
 import { FilmResolver } from './film-resolver.service';
 
 const ROUTES = [
-  { path: 'films', component: FilmsComponent },
+  { path: 'films', component: FilmShellComponent },
   {
     path: 'films/:id',
     component: FilmDetailComponent,
@@ -42,6 +45,9 @@ const ROUTES = [
   ],
   declarations: [
     FilmsComponent,
+    FilmShellComponent,
+    FilmShellDetailComponent,
+    FilmShellListComponent,
     FilmDetailComponent,
     EditFilmComponent,
     EditFilmBasicInfoComponent,
