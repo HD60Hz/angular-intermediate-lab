@@ -6,6 +6,10 @@
     </div>
 </div>
 <div class='row'>
+    <div class="col-md12" *ngIf="currentFilm">
+        Le prix du film choisi est : {{ currentFilm.price | currency:"USD":"symbol":"1.2-2" }}</div>
+</div>
+<div class='row'>
     <div class='col-md-4'>
         <app-film-shell-list></app-film-shell-list>
     </div>

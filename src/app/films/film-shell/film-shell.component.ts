@@ -1,15 +1,22 @@
 import { Component, OnInit } from '@angular/core';
+import { Film } from '../film';
+import { FilmService } from '../film.service';
 
 @Component({
     templateUrl: './film-shell.component.html'
 })
 export class FilmShellComponent implements OnInit {
-    pageTitle: string = 'Films';
+    pageTitle =  'Films';
     monthCount: number;
 
-    constructor() { }
+    currentFilm: Film | null;
+
+    constructor(private filmService: FilmService) { }
 
     ngOnInit() {
+        this.filmService.selctedFilmChange$.subscribe(
+            currentFilm => this.currentFilm = currentFilm
+        );
     }
 
 }

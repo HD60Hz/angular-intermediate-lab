@@ -931,3 +931,66 @@ export class FilmShellDetailComponent implements OnInit {
   }
 }
 ```
+
+Pour avoir un cas qui représente l'obsevable Subject on va avoir besoin de plus qu'une souscription
+
+Supposant qu'on a besoin d'afficher sur le component parent le prix du film choisi 
+
+
+```typeScript
+export class FilmShellComponent implements OnInit {
+    pageTitle =  'Films';
+    monthCount: number;
+
+    // ajouter une propriété currentFilm
+    currentFilm: Film | null;
+
+    constructor(private filmService: FilmService) { }
+
+    ngOnInit() {
+        this.filmService.selctedFilmChange$.subscribe(
+            currentFilm => this.currentFilm = currentFilm
+        );
+    }
+
+}
+```
+
+```html
+<div class='row' *ngIf='favoris'>
+    <div class='col-md-4'>
+        <h4>
+           Liste des films favoris
+        </h4>
+    </div>
+</div>
+<!-- Ajout du prix de film quand l'utilisateur selectionne un film  -->
+<div class='row'>
+    <div class="col-md12" *ngIf="currentFilm">
+        Le prix du film choisi est : {{ currentFilm.price | currency:"USD":"symbol":"1.2-2" }}</div>
+</div>
+<!-- ---------------------------- -->
+<div class='row'>
+    <div class='col-md-4'>
+        <app-film-shell-list></app-film-shell-list>
+    </div>
+    <div class='col-md-8'>
+        <app-film-shell-detail></app-film-shell-detail>
+    </div>
+</div>
+```
+
+Quand on fait une modification d'un film est on revient sur la page films on perd le film selectionné ..... :(, heureusement qu'on a plusieurs variante de Subject :
+
+2. BehaviorSubject : c'est un Subject à l'exception de deux point 
+- Il a besoin d'une valeur initial 
+- Il retourne toujours la valeur actuel à chaque nouvelle souscription 
+
+```typeScript
+  // ajout de subject
+  private selctedFilmSource = new BehaviorSubject<Film|null>(null);
+```
+
+# A la fin il faut pas oublier de unsubscrib C'est tres imporant pour éviter les lake memory #
+
+
