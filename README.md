@@ -993,4 +993,4 @@ Quand on fait une modification d'un film est on revient sur la page films on per
 
 # A la fin il faut pas oublier de unsubscrib C'est tres imporant pour éviter les lake memory #
 
-
+# NGRX c'est l'implémentation de REDUX c'est un autre moyen de communication, on va le voir dans la session avancee  #
