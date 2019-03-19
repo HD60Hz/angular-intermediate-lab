@@ -1,0 +1,27 @@
+<div class="card" *ngIf="films">
+  <div id="films" class="row view-group">
+    <div *ngFor="let film of films" class="item list-group-item col-md-12  col-sm-12">
+      <div class="thumbnail card">
+        <div class="caption card-body"><h4 class="group card-title inner list-group-item-heading">
+          <button class="btn btn-outline-primary btn-sm" (click)="changeCurrentFilm(film)">
+            {{ film.filmName }}
+          </button>
+        </h4>
+        <h4 class="group card-title inner list-group-item-heading">
+          <img *ngIf="film.imageUrl" class="group list-group-image img-fluid img-card" [src]="film.imageUrl"
+            [title]="film.filmName" style="height: 100px;width: 50px; pull: left">
+        </h4>
+          <p>
+            <pm-star [rating]="film.starRating" class="goldenrod"></pm-star>
+          </p>
+          <div class="col-xs-12 col-md-6 text-right">
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf='errorMessage' class='alert alert-danger'>
+    Error: {{ errorMessage }}
+  </div>
+</div>
