@@ -45,7 +45,7 @@ normalement nous l'avons déjà dans notre projet et il est ajouté par défaut 
 
 Hands-On !!!!
 
-Nous allons importer et créer notre Observable 
+Nous allons importer et créer notre Observable avec la manière facile :)
 
 
 * Importer RxJs 
@@ -56,16 +56,10 @@ export class ATeamComponent{
   public pageTitle = 'Bienvenue';
   imageWidth: number = 100;
   numbers = [0, 3, 7, 5];
-  source$ = Observable.create(observer => {
-    for (let index = 0; index < this.numbers.length; index++) {
-      const nbr= this.numbers[index];
-      observer.next(nbr);
-    }
-    observer.complete();
-  });
+  sourceFrom$ = from(this.numbers);
 
   constructor() {
-    this.source$.subscribe(
+    this.sourceFrom$.subscribe(
       value => console.log(`value: ${value}`),
       e => console.log(`error: ${e}`),
       () => console.log("complete")
@@ -78,7 +72,7 @@ C'est juste un tableau, oui dans notre exmple, mais peut être que le tableau va
 Par convention les observable il faut les postfixer par '$'
 
 A la souscription, on doit déclarer trois fonctions :
-* onNext()  : appelée chaque foit qu'un élément sera émis par l'Observable
+* onNext()  : C'est la fonction obligatoir à implémenter lors de la souscription, elle est appelée chaque foit qu'un élément sera émis par l'Observable
 ```typeScript 
 value => console.log(`value: ${value}`),
 ```
@@ -90,12 +84,12 @@ e => console.log(`error: ${e}`),
 ```typeScript 
 () => console.log("complete")
 ```
-Pour simuler onError() on va  déclencher une erreur
+Maintenant on va voir une autre façon de créer un Observable, avec Observable.create et pour simuler onError() on va  déclencher une erreur si la valeur égale à stalingrade 
 
 ```typeScript
   source$ = Observable.create(observer => {
     for (const nbr of this.numbers) {
-      if (nbr === 7) { observer.error('Error into the Observable'); }
+      if (nbr === 'Stalingrade') { observer.error('Error into the Observable'); }
       observer.next(nbr);
     }
     observer.complete();

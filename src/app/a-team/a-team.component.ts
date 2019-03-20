@@ -1,5 +1,5 @@
 import { map, filter } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { Observable, fromEvent, from } from 'rxjs';
 import { Component } from '@angular/core';
 
 @Component({
@@ -11,7 +11,8 @@ export class ATeamComponent {
   public pageTitle = 'Film disponible dans notre application : ';
   imageWidth = 100;
   numbers = ['Scarface', 'BraveHeart', 'Gladiator', 'Stalingrade'];
-
+  mouseEvent$ = fromEvent(document, 'mousemove');
+  sourceFrom$ = from(this.numbers);
   source$ = Observable.create(observer => {
     let index = 0;
     let getValue = () => {
@@ -26,6 +27,12 @@ export class ATeamComponent {
   });
 
   constructor() {
+    this.sourceFrom$.subscribe(
+      value => console.log(value)
+    )
+    this.mouseEvent$.subscribe(
+      value => console.log(value)
+    );
   }
 
 
